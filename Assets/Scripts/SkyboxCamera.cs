@@ -14,6 +14,8 @@ public class SkyboxCamera : MonoBehaviour {
     // the additional rotation to add to the skybox
     // can be set during game play or in the inspector
     public Vector3 SkyBoxRotation;
+    Quaternion mainCameraRotationPrev;
+    Quaternion mainCameraRotationDisplacement;
  
     // Use this for initialization
     void Start()
@@ -28,6 +30,7 @@ public class SkyboxCamera : MonoBehaviour {
             Debug.Log("Main camera needs to be set to dont clear" +
                 "in the inspector");
         }
+        mainCameraRotationPrev = MainCamera.transform.rotation;
     }
    
     // if you need to rotate the skybox during gameplay
@@ -42,6 +45,9 @@ public class SkyboxCamera : MonoBehaviour {
     {
        
         SkyCamera.transform.position = MainCamera.transform.position;
+        mainCameraRotationDisplacement = mainCameraRotationPrev * Quaternion.Inverse(MainCamera.transform.rotation);
+        mainCameraRotationPrev = MainCamera.transform.rotation;
+        SkyCamera.transform.Rotate(mainCameraRotationDisplacement.eulerAngles);
         SkyCamera.transform.Rotate(SkyBoxRotation);
     }
 }
