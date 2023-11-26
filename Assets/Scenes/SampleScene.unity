@@ -630,6 +630,14 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c26b23224460b0a45a85fc13ded217b4, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  expParametersPanel: {fileID: 1738760813}
+  roundParametersPanel: {fileID: 222244543}
+  expeFolderInputField: {fileID: 940253086}
+  participantNumberInputField: {fileID: 1448824836}
+  roundDurationInSecondInputField: {fileID: 720977391}
+  xAxisdegreesPerSecondInputField: {fileID: 1055743887}
+  yAxisdegreesPerSecondInputField: {fileID: 1069103814}
+  zAxisdegreesPerSecondInputField: {fileID: 1524651375}
 --- !u!1 &124919211
 GameObject:
   m_ObjectHideFlags: 0
@@ -798,7 +806,7 @@ GameObject:
   - component: {fileID: 129267453}
   - component: {fileID: 129267452}
   m_Layer: 5
-  m_Name: Canvas Ggg
+  m_Name: Canvas
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -905,7 +913,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &222244544
 RectTransform:
   m_ObjectHideFlags: 0
@@ -1694,7 +1702,7 @@ MonoBehaviour:
   m_CaretColor: {r: 0.19607843, g: 0.19607843, b: 0.19607843, a: 1}
   m_CustomCaretColor: 0
   m_SelectionColor: {r: 0.65882355, g: 0.80784315, b: 1, a: 0.7529412}
-  m_Text: 
+  m_Text: 0
   m_CaretBlinkRate: 0.85
   m_CaretWidth: 1
   m_ReadOnly: 0
@@ -2549,7 +2557,7 @@ MonoBehaviour:
   m_CaretColor: {r: 0.19607843, g: 0.19607843, b: 0.19607843, a: 1}
   m_CustomCaretColor: 0
   m_SelectionColor: {r: 0.65882355, g: 0.80784315, b: 1, a: 0.7529412}
-  m_Text: 
+  m_Text: 0
   m_CaretBlinkRate: 0.85
   m_CaretWidth: 1
   m_ReadOnly: 0
@@ -2724,7 +2732,7 @@ MonoBehaviour:
   m_CaretColor: {r: 0.19607843, g: 0.19607843, b: 0.19607843, a: 1}
   m_CustomCaretColor: 0
   m_SelectionColor: {r: 0.65882355, g: 0.80784315, b: 1, a: 0.7529412}
-  m_Text: 
+  m_Text: 0
   m_CaretBlinkRate: 0.85
   m_CaretWidth: 1
   m_ReadOnly: 0
@@ -3787,7 +3795,7 @@ MonoBehaviour:
   m_CaretColor: {r: 0.19607843, g: 0.19607843, b: 0.19607843, a: 1}
   m_CustomCaretColor: 0
   m_SelectionColor: {r: 0.65882355, g: 0.80784315, b: 1, a: 0.7529412}
-  m_Text: 
+  m_Text: 0
   m_CaretBlinkRate: 0.85
   m_CaretWidth: 1
   m_ReadOnly: 0
@@ -4668,7 +4676,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 359, y: -216}
+  m_AnchoredPosition: {x: 312, y: -216}
   m_SizeDelta: {x: 160, y: 30}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1876210052
