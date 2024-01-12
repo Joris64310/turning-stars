@@ -1,3 +1,5 @@
+using System;
+using System.IO;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -5,6 +7,30 @@ using UnityEngine.UI;
 using TMPro;
 public class ExpeInterfaceManager : MonoBehaviour
 {
+    // Constant
+    string pathRefProject = "C:\\Users\\joris\\Documents\\turning_stars_data";
+    int initNumberParticipant = 0;
+
+    int roundDuration = 60
+
+    List<Round> roundsList = new List<Round>()
+    {
+        new Round(durationInSecondParam = roundDuration,
+                  xAxisdegreesPerSecondParam = 10,
+                  yAxisdegreesPerSecondParam = 0,
+                  zAxisdegreesPerSecond = 0),
+        new Round(durationInSecondParam = roundDuration,
+                  xAxisdegreesPerSecondParam = 0,
+                  yAxisdegreesPerSecondParam = 10,
+                  zAxisdegreesPerSecond = 0),
+        new Round(durationInSecondParam = roundDuration,
+                  xAxisdegreesPerSecondParam = 0,
+                  yAxisdegreesPerSecondParam = 0,
+                  zAxisdegreesPerSecond = 10)
+                  };
+
+    // Path
+    string participantFilePath;
     // Interfaces
     public GameObject expParametersPanel;
     public GameObject roundParametersPanel;
@@ -56,8 +82,9 @@ public class ExpeInterfaceManager : MonoBehaviour
         yAxisdegreesPerSecondInputField.contentType = TMP_InputField.ContentType.IntegerNumber;
         zAxisdegreesPerSecondInputField.contentType = TMP_InputField.ContentType.IntegerNumber;
 
-        //TODO: proposed a participant number
-
+        //Proposed a participant number and path to save data
+        participantNumberInputField.text = initNumberParticipant.ToString();
+        expeFolderInputField.text = pathRefProject;
 
         // Set inactive the round panel
         roundParametersPanel.SetActive(false);
@@ -91,7 +118,19 @@ public class ExpeInterfaceManager : MonoBehaviour
         expParametersPanel.SetActive(false);
         roundParametersPanel.SetActive(true);
 
-        //TODO: Create the participant folder
+        // Create expe folder
+        participantFilePath = expeFolderInputField.text;
+        if (!Directory.Exists(participantFilePath))
+        {
+            Directory.CreateDirectory(participantFilePath);
+        }
+        // Create participant folder
+        participantFilePath += String.Format("/s{0}_{1}/", participantNumberInputField.text, DateTime.Now.ToString(@"dd-MM-yy_HH\hmm"));
+        if (!Directory.Exists(participantFilePath))
+        {
+            Directory.CreateDirectory(participantFilePath);
+        }
+
 
     }
     private void TaskOnClickSetRoundParametersButton()
@@ -115,4 +154,20 @@ public class ExpeInterfaceManager : MonoBehaviour
          Application.Quit();
     }
 
+}
+class Round
+{
+  public int durationInSecond;
+  public int xAxisdegreesPerSecond;
+  public int yAxisdegreesPerSecond;
+  public int zAxisdegreesPerSecond;
+
+  // Create a class constructor for the Car class
+  public Round(int durationInSecondParam, int xAxisdegreesPerSecondParam, int yAxisdegreesPerSecondParam, int zAxisdegreesPerSecondParam)
+  {
+    durationInSecond = durationInSecondParam;
+    xAxisdegreesPerSecond = xAxisdegreesPerSecondParam;
+    yAxisdegreesPerSecond = yAxisdegreesPerSecondParam;
+    zAxisdegreesPerSecond = zAxisdegreesPerSecondParam;
+  }
 }
