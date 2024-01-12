@@ -11,7 +11,7 @@ public class ExpeInterfaceManager : MonoBehaviour
     string pathRefProject = "C:\\Users\\joris\\Documents\\turning_stars_data";
     int initNumberParticipant = 0;
 
-    int roundDuration = 60
+    int roundDuration = 60;
 
     List<Round> roundsList = new List<Round>()
     {
