@@ -199,11 +199,19 @@ public class ExpeInterfaceManager : MonoBehaviour
     }
     private void SetNextRoundParameters()
     {
-        roundMessage.text =  string.Format("Round number {0}:", roundNumber + 1);
-        roundDurationInSecondInputField.text = roundsList[roundNumber].DurationInSecond.ToString();
-        xAxisdegreesPerSecondInputField.text = roundsList[roundNumber].XAxisdegreesPerSecond.ToString();
-        yAxisdegreesPerSecondInputField.text = roundsList[roundNumber].YAxisdegreesPerSecond.ToString();
-        zAxisdegreesPerSecondInputField.text = roundsList[roundNumber].ZAxisdegreesPerSecond.ToString();
+        if (roundNumber < roundsList.Count)
+        {
+            roundMessage.text =  string.Format("Round number {0}:", roundNumber + 1);
+            roundDurationInSecondInputField.text = roundsList[roundNumber].DurationInSecond.ToString();
+            xAxisdegreesPerSecondInputField.text = roundsList[roundNumber].XAxisdegreesPerSecond.ToString();
+            yAxisdegreesPerSecondInputField.text = roundsList[roundNumber].YAxisdegreesPerSecond.ToString();
+            zAxisdegreesPerSecondInputField.text = roundsList[roundNumber].ZAxisdegreesPerSecond.ToString();
+        }
+        else
+        {
+            roundMessage.text =  string.Format("Round number {0} (extra):", roundNumber + 1);
+        }
+
     }
 
 }
