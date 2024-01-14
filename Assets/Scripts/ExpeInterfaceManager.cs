@@ -7,6 +7,9 @@ using UnityEngine.UI;
 using TMPro;
 public class ExpeInterfaceManager : MonoBehaviour
 {
+    //Utility objects to write data in a JSON file
+    DataWriter expDataWriter;
+
     // Constant
     int initNumberParticipant = 0;
 
@@ -14,34 +17,35 @@ public class ExpeInterfaceManager : MonoBehaviour
 
     List<Round> roundsList = new List<Round>()
         {
-            new Round(roundDuration,
-                      0.1f,
-                      0,
-                      0),
-            new Round(roundDuration,
-                      0,
-                      0.1f,
-                      0),
-            new Round(roundDuration,
-                      0,
-                      0,
-                      0.1f),
-            new Round(roundDuration,
-                      -0.1f,
-                      0,
-                      0),
-            new Round(roundDuration,
-                      0,
-                      -0.1f,
-                      0),
-            new Round(roundDuration,
-                      0,
-                      0,
-                      -0.1f)
+            new Round(durationInSecond:roundDuration,
+                      xAxisdegreesPerSecond:0.1f,
+                      yAxisdegreesPerSecond:0,
+                      zAxisdegreesPerSecond:0),
+            new Round(durationInSecond:roundDuration,
+                      xAxisdegreesPerSecond:-0.1f,
+                      yAxisdegreesPerSecond:0,
+                      zAxisdegreesPerSecond:0),
+            new Round(durationInSecond:roundDuration,
+                      xAxisdegreesPerSecond: 0,
+                      yAxisdegreesPerSecond:0.1f,
+                      zAxisdegreesPerSecond:0),
+            new Round(durationInSecond:roundDuration,
+                      xAxisdegreesPerSecond:0,
+                      yAxisdegreesPerSecond:-0.1f,
+                      zAxisdegreesPerSecond:0),
+            new Round(durationInSecond:roundDuration,
+                      xAxisdegreesPerSecond:0,
+                      yAxisdegreesPerSecond:0,
+                      zAxisdegreesPerSecond:0.1f),
+            new Round(durationInSecond:roundDuration,
+                      xAxisdegreesPerSecond:0,
+                      yAxisdegreesPerSecond:0,
+                      zAxisdegreesPerSecond:-0.1f)
                     };
 
 
-
+    // Save data
+    CommonExperimentToSave data;
     // Path
     string participantFilePath;
     // Interfaces
@@ -118,21 +122,19 @@ public class ExpeInterfaceManager : MonoBehaviour
         {
             roundElapsedTime = System.DateTime.UtcNow - roundStartTime;
             Debug.Log(roundElapsedTime);
-
+            data = new CommonExperimentToSave{timestamp = (float)roundElapsedTime.TotalSeconds + roundElapsedTime.Milliseconds / 1000};
             if (roundElapsedTime < roundDurationTime)
             {
-                //TODO: save data
+                expDataWriter.WriteSample(data);
             }
             else
             {
+                expDataWriter.WriteSample(data, finalSample: true);
                 roundParametersPanel.SetActive(true);
                 roundNumber += 1;
                 inRoundBool = false;
                 skyboxCamera.SetSkyBoxRotation(new Vector3(0, 0, 0));
                 SetNextRoundParameters();
-
-
-                //TODO: Save and close last data
             }
         }
 
@@ -171,6 +173,9 @@ public class ExpeInterfaceManager : MonoBehaviour
         xAxisdegreesPerSecondValue = float.Parse(xAxisdegreesPerSecondInputField.text);
         yAxisdegreesPerSecondValue = float.Parse(yAxisdegreesPerSecondInputField.text);
         zAxisdegreesPerSecondValue = float.Parse(zAxisdegreesPerSecondInputField.text);
+
+        // Prepare file to save 
+        expDataWriter = new DataWriter(participantFilePath, "round_" + roundNumber.ToString());
 
         //Update rotation value of the camera
         skyboxCamera.SetSkyBoxRotation(new Vector3(xAxisdegreesPerSecondValue, yAxisdegreesPerSecondValue, zAxisdegreesPerSecondValue));
