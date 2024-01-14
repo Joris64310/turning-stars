@@ -138,8 +138,9 @@ public class ExpeInterfaceManager : MonoBehaviour
                 roundNumber += 1;
                 inRoundBool = false;
                 skyboxCamera.SetSkyBoxRotation(new Vector3(0, 0, 0));
-                SetNextRoundParameters();
                 timeElapsePanel.SetActive(false);
+                SetNextRoundParameters();
+
 
             }
         }
