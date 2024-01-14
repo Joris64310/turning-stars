@@ -8,32 +8,50 @@ using TMPro;
 public class ExpeInterfaceManager : MonoBehaviour
 {
     // Constant
-    string pathRefProject = "C:\\Users\\joris\\Documents\\turning_stars_data";
     int initNumberParticipant = 0;
 
-    int roundDuration = 60;
+    public static int roundDuration = 10;
 
     List<Round> roundsList = new List<Round>()
-    {
-        new Round(durationInSecondParam = roundDuration,
-                  xAxisdegreesPerSecondParam = 10,
-                  yAxisdegreesPerSecondParam = 0,
-                  zAxisdegreesPerSecond = 0),
-        new Round(durationInSecondParam = roundDuration,
-                  xAxisdegreesPerSecondParam = 0,
-                  yAxisdegreesPerSecondParam = 10,
-                  zAxisdegreesPerSecond = 0),
-        new Round(durationInSecondParam = roundDuration,
-                  xAxisdegreesPerSecondParam = 0,
-                  yAxisdegreesPerSecondParam = 0,
-                  zAxisdegreesPerSecond = 10)
-                  };
+        {
+            new Round(roundDuration,
+                      0.1f,
+                      0,
+                      0),
+            new Round(roundDuration,
+                      0,
+                      0.1f,
+                      0),
+            new Round(roundDuration,
+                      0,
+                      0,
+                      0.1f),
+            new Round(roundDuration,
+                      -0.1f,
+                      0,
+                      0),
+            new Round(roundDuration,
+                      0,
+                      -0.1f,
+                      0),
+            new Round(roundDuration,
+                      0,
+                      0,
+                      -0.1f)
+                    };
+
+
 
     // Path
     string participantFilePath;
     // Interfaces
     public GameObject expParametersPanel;
     public GameObject roundParametersPanel;
+    public TMP_Text roundMessage;
+
+    // Camera
+    public GameObject cameraHolder;
+    SkyboxCamera skyboxCamera;
 
     // Input fields
     public TMP_InputField expeFolderInputField;
@@ -56,13 +74,15 @@ public class ExpeInterfaceManager : MonoBehaviour
     System.TimeSpan roundElapsedTime;
     System.TimeSpan roundDurationTime;
  
-    int xAxisdegreesPerSecondValue;
-    int yAxisdegreesPerSecondValue;
-    int zAxisdegreesPerSecondValue;
+    float xAxisdegreesPerSecondValue;
+    float yAxisdegreesPerSecondValue;
+    float zAxisdegreesPerSecondValue;
 
     // Start is called before the first frame update
     void Start()
     {
+        // Get camera script
+        skyboxCamera = cameraHolder.GetComponent<SkyboxCamera>();
         // Set active the round panel
         roundParametersPanel.SetActive(true);
         // Buttons
@@ -82,9 +102,10 @@ public class ExpeInterfaceManager : MonoBehaviour
         yAxisdegreesPerSecondInputField.contentType = TMP_InputField.ContentType.IntegerNumber;
         zAxisdegreesPerSecondInputField.contentType = TMP_InputField.ContentType.IntegerNumber;
 
+
         //Proposed a participant number and path to save data
         participantNumberInputField.text = initNumberParticipant.ToString();
-        expeFolderInputField.text = pathRefProject;
+        expeFolderInputField.text = Path.Combine(System.Environment.GetFolderPath(System.Environment.SpecialFolder.MyDocuments), "turning_stars");
 
         // Set inactive the round panel
         roundParametersPanel.SetActive(false);
@@ -96,6 +117,7 @@ public class ExpeInterfaceManager : MonoBehaviour
         if (inRoundBool)
         {
             roundElapsedTime = System.DateTime.UtcNow - roundStartTime;
+            Debug.Log(roundElapsedTime);
 
             if (roundElapsedTime < roundDurationTime)
             {
@@ -105,8 +127,11 @@ public class ExpeInterfaceManager : MonoBehaviour
             {
                 roundParametersPanel.SetActive(true);
                 roundNumber += 1;
-                //TODO: Update text
                 inRoundBool = false;
+                skyboxCamera.SetSkyBoxRotation(new Vector3(0, 0, 0));
+                SetNextRoundParameters();
+
+
                 //TODO: Save and close last data
             }
         }
@@ -131,8 +156,11 @@ public class ExpeInterfaceManager : MonoBehaviour
             Directory.CreateDirectory(participantFilePath);
         }
 
+        // Set first round value
+        SetNextRoundParameters();
 
     }
+
     private void TaskOnClickSetRoundParametersButton()
     {
         // Get round duration
@@ -140,34 +168,66 @@ public class ExpeInterfaceManager : MonoBehaviour
         roundDurationTime = System.TimeSpan.FromSeconds(int.Parse(roundDurationInSecondInputField.text));
 
         // Get round rotation
-        xAxisdegreesPerSecondValue = int.Parse(xAxisdegreesPerSecondInputField.text);
-        yAxisdegreesPerSecondValue = int.Parse(yAxisdegreesPerSecondInputField.text);
-        zAxisdegreesPerSecondValue = int.Parse(zAxisdegreesPerSecondInputField.text);
+        xAxisdegreesPerSecondValue = float.Parse(xAxisdegreesPerSecondInputField.text);
+        yAxisdegreesPerSecondValue = float.Parse(yAxisdegreesPerSecondInputField.text);
+        zAxisdegreesPerSecondValue = float.Parse(zAxisdegreesPerSecondInputField.text);
 
-        //TODO: Update rotation value of the camera
+        //Update rotation value of the camera
+        skyboxCamera.SetSkyBoxRotation(new Vector3(xAxisdegreesPerSecondValue, yAxisdegreesPerSecondValue, zAxisdegreesPerSecondValue));
+
 
         roundParametersPanel.SetActive(false);
+        inRoundBool = true;
 
     }
     private void TaskOnClickSetExitButton()
     {
          Application.Quit();
     }
+    private void SetNextRoundParameters()
+    {
+        roundMessage.text =  string.Format("Round number {0}:", roundNumber + 1);
+        roundDurationInSecondInputField.text = roundsList[roundNumber].DurationInSecond.ToString();
+        xAxisdegreesPerSecondInputField.text = roundsList[roundNumber].XAxisdegreesPerSecond.ToString();
+        yAxisdegreesPerSecondInputField.text = roundsList[roundNumber].YAxisdegreesPerSecond.ToString();
+        zAxisdegreesPerSecondInputField.text = roundsList[roundNumber].ZAxisdegreesPerSecond.ToString();
+    }
 
 }
-class Round
-{
-  public int durationInSecond;
-  public int xAxisdegreesPerSecond;
-  public int yAxisdegreesPerSecond;
-  public int zAxisdegreesPerSecond;
+public class Round{
+    private int _durationInSecond;
+    private float _xAxisdegreesPerSecond;
+    private float _yAxisdegreesPerSecond;
+    private float _zAxisdegreesPerSecond;
 
-  // Create a class constructor for the Car class
-  public Round(int durationInSecondParam, int xAxisdegreesPerSecondParam, int yAxisdegreesPerSecondParam, int zAxisdegreesPerSecondParam)
-  {
-    durationInSecond = durationInSecondParam;
-    xAxisdegreesPerSecond = xAxisdegreesPerSecondParam;
-    yAxisdegreesPerSecond = yAxisdegreesPerSecondParam;
-    zAxisdegreesPerSecond = zAxisdegreesPerSecondParam;
-  }
+    public Round(int durationInSecond, float xAxisdegreesPerSecond, float yAxisdegreesPerSecond, float zAxisdegreesPerSecond)
+    {
+        _durationInSecond = durationInSecond;
+        _xAxisdegreesPerSecond = xAxisdegreesPerSecond;
+        _yAxisdegreesPerSecond = yAxisdegreesPerSecond;
+        _zAxisdegreesPerSecond = zAxisdegreesPerSecond;
+    }
+
+    public int DurationInSecond
+    {
+        get => _durationInSecond;
+        set => _durationInSecond = value;
+    }
+    public float XAxisdegreesPerSecond
+    {
+        get => _xAxisdegreesPerSecond;
+        set => _xAxisdegreesPerSecond = value;
+    }
+
+    public float YAxisdegreesPerSecond
+    {
+        get => _yAxisdegreesPerSecond;
+        set => _yAxisdegreesPerSecond = value;
+    }
+
+    public float ZAxisdegreesPerSecond
+    {
+        get => _zAxisdegreesPerSecond;
+        set => _zAxisdegreesPerSecond = value;
+    }
 }
