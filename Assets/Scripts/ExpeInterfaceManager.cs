@@ -51,7 +51,10 @@ public class ExpeInterfaceManager : MonoBehaviour
     // Interfaces
     public GameObject expParametersPanel;
     public GameObject roundParametersPanel;
+    public GameObject timeElapsePanel;
+
     public TMP_Text roundMessage;
+    public TMP_Text timeElapseMessage;
 
     // Camera
     public GameObject cameraHolder;
@@ -113,6 +116,7 @@ public class ExpeInterfaceManager : MonoBehaviour
 
         // Set inactive the round panel
         roundParametersPanel.SetActive(false);
+        timeElapsePanel.SetActive(false);
     }
 
     // Update is called once per frame
@@ -120,8 +124,8 @@ public class ExpeInterfaceManager : MonoBehaviour
     {
         if (inRoundBool)
         {
-            roundElapsedTime = System.DateTime.UtcNow - roundStartTime;
-            Debug.Log(roundElapsedTime);
+            roundElapsedTime = System.DateTime.Now - roundStartTime;
+            timeElapseMessage.text = ((int)roundElapsedTime.TotalSeconds).ToString();
             data = new CommonExperimentToSave{timestamp = (float)roundElapsedTime.TotalSeconds + roundElapsedTime.Milliseconds / 1000};
             if (roundElapsedTime < roundDurationTime)
             {
@@ -135,6 +139,8 @@ public class ExpeInterfaceManager : MonoBehaviour
                 inRoundBool = false;
                 skyboxCamera.SetSkyBoxRotation(new Vector3(0, 0, 0));
                 SetNextRoundParameters();
+                timeElapsePanel.SetActive(false);
+
             }
         }
 
@@ -166,7 +172,7 @@ public class ExpeInterfaceManager : MonoBehaviour
     private void TaskOnClickSetRoundParametersButton()
     {
         // Get round duration
-        roundStartTime = System.DateTime.UtcNow;
+        roundStartTime = System.DateTime.Now;
         roundDurationTime = System.TimeSpan.FromSeconds(int.Parse(roundDurationInSecondInputField.text));
 
         // Get round rotation
@@ -183,6 +189,7 @@ public class ExpeInterfaceManager : MonoBehaviour
 
         roundParametersPanel.SetActive(false);
         inRoundBool = true;
+        timeElapsePanel.SetActive(true);
 
     }
     private void TaskOnClickSetExitButton()
