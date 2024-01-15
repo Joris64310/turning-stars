@@ -4,7 +4,9 @@ Contains all the classes of data used to write and extract data
 using System;
 using System.IO;
 using UnityEngine;
-
+using System.Collections;
+using Newtonsoft.Json.Linq;
+using System.Collections.Generic;
 
 public class RoundWriter
 {
@@ -16,7 +18,7 @@ public class RoundWriter
         this.filePath = filePath;
         // Create file if needed and write its header
         writer = new StreamWriter(this.filePath, false);  // Erase file if it already exists
-        writer.WriteLine("{\"round\":[");
+        writer.WriteLine("{\"rounds\":[");
         firstSample = true;
     }
     public RoundWriter(string dstFolderPath, string dstFilename) : this(string.Concat(dstFolderPath, dstFilename)) { }
@@ -49,6 +51,42 @@ public class RoundWriter
             this.writer.Close();
         }
     }
+
+    public List<Round> ReadFileForRounds()
+    {
+
+        List<Round> tempsRoundsList = new List<Round>();
+        Debug.Log(filePath + " If it crashed here probably the file does not exist or is not well formatted");
+        StreamReader fs = new StreamReader(filePath, true);
+        string jsonString = fs.ReadToEnd();
+        fs.Close();
+        JObject jsonRounds = JObject.Parse(jsonString);
+
+        JToken target;
+        int k = 0;
+        Vector3 targetLocation;
+        Quaternion targetOrientation;
+        while (true)
+        {
+            try
+            {
+                round = jsonRounds["rounds"][k];
+            }
+            catch (ArgumentOutOfRangeException)
+            {
+                Debug.Log("Reached end of file: loaded " + tempsRoundsList);
+                break;
+            }
+
+            tempsRoundsList.Add(new Round(p_durationInSecond:round["durationInSecond"],
+                                          p_xAxisdegreesPerSecond:round["xAxisdegreesPerSecond"],
+                                          p_yAxisdegreesPerSecond:round["yAxisdegreesPerSecond"],
+                                          p_zAxisdegreesPerSecond:round["zAxisdegreesPerSecond"]));
+            k++;
+        }
+        return tempsRoundsList;
+    }
+
 }
 
 
@@ -67,4 +105,3 @@ public class Round : SampleToJson{
         zAxisdegreesPerSecond = p_zAxisdegreesPerSecond;
     }
 }
-

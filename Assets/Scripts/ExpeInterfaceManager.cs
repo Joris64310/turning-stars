@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
+using System.Linq;
 public class ExpeInterfaceManager : MonoBehaviour
 {
     //Utility objects to write data in a JSON file
@@ -43,6 +44,7 @@ public class ExpeInterfaceManager : MonoBehaviour
                       p_yAxisdegreesPerSecond:0,
                       p_zAxisdegreesPerSecond:-0.1f)
                     };
+    bool MAKE_A_NEW_SET_OF_ROUNDS = false;
 
     Round currentRound;
 
@@ -91,6 +93,23 @@ public class ExpeInterfaceManager : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
+        // Make a new set of rounds
+        roundWriter = new RoundWriter(Path.Combine(System.Environment.GetFolderPath(System.Environment.SpecialFolder.MyDocuments), "rounds_list_info.json"));
+
+        if (MAKE_A_NEW_SET_OF_ROUNDS)
+        {
+            for (int i = 0; i < roundsList.Count - 1; i++)
+            {
+                roundWriter.WriteSample(roundsList[i]);     
+            
+            }
+            roundWriter.WriteSample(roundsList.Last(), finalSample: true);
+        }
+        else
+        {
+            roundsList = roundWriter.ReadFileForRounds();
+        }
+
         // Get camera script
         skyboxCamera = cameraHolder.GetComponent<SkyboxCamera>();
         // Set active the round panel
