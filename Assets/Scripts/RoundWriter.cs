@@ -61,11 +61,8 @@ public class RoundWriter
         string jsonString = fs.ReadToEnd();
         fs.Close();
         JObject jsonRounds = JObject.Parse(jsonString);
-
-        JToken target;
+        JToken round;
         int k = 0;
-        Vector3 targetLocation;
-        Quaternion targetOrientation;
         while (true)
         {
             try
@@ -78,10 +75,10 @@ public class RoundWriter
                 break;
             }
 
-            tempsRoundsList.Add(new Round(p_durationInSecond:round["durationInSecond"],
-                                          p_xAxisdegreesPerSecond:round["xAxisdegreesPerSecond"],
-                                          p_yAxisdegreesPerSecond:round["yAxisdegreesPerSecond"],
-                                          p_zAxisdegreesPerSecond:round["zAxisdegreesPerSecond"]));
+            tempsRoundsList.Add(new Round(p_durationInSecond:(int)round["durationInSecond"],
+                                          p_xAxisdegreesPerSecond:(float)round["xAxisdegreesPerSecond"],
+                                          p_yAxisdegreesPerSecond:(float)round["yAxisdegreesPerSecond"],
+                                          p_zAxisdegreesPerSecond:(float)round["zAxisdegreesPerSecond"]));
             k++;
         }
         return tempsRoundsList;

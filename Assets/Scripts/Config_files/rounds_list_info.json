@@ -1,8 +1,0 @@
-{"rounds":[
-  {"durationInSecond":10,"xAxisdegreesPerSecond":0.10000000149011612,"yAxisdegreesPerSecond":0.0,"zAxisdegreesPerSecond":0.0},
-  {"durationInSecond":10,"xAxisdegreesPerSecond":-0.10000000149011612,"yAxisdegreesPerSecond":0.0,"zAxisdegreesPerSecond":0.0},
-  {"durationInSecond":10,"xAxisdegreesPerSecond":0.0,"yAxisdegreesPerSecond":0.10000000149011612,"zAxisdegreesPerSecond":0.0},
-  {"durationInSecond":10,"xAxisdegreesPerSecond":0.0,"yAxisdegreesPerSecond":-0.10000000149011612,"zAxisdegreesPerSecond":0.0},
-  {"durationInSecond":10,"xAxisdegreesPerSecond":0.0,"yAxisdegreesPerSecond":0.0,"zAxisdegreesPerSecond":0.10000000149011612},
-  {"durationInSecond":10,"xAxisdegreesPerSecond":0.0,"yAxisdegreesPerSecond":0.0,"zAxisdegreesPerSecond":-0.10000000149011612}
-]}

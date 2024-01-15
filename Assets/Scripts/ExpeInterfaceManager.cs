@@ -94,7 +94,14 @@ public class ExpeInterfaceManager : MonoBehaviour
     void Start()
     {
         // Make a new set of rounds
-        roundWriter = new RoundWriter(Path.Combine(System.Environment.GetFolderPath(System.Environment.SpecialFolder.MyDocuments), "rounds_list_info.json"));
+        string folderPath = Path.Combine(System.Environment.GetFolderPath(System.Environment.SpecialFolder.MyDocuments), "TurningStarsConfigFiles");
+        if (!Directory.Exists(folderPath))
+        {
+            Directory.CreateDirectory(folderPath);
+        }
+
+        roundWriter = new RoundWriter(Path.Combine(folderPath, "rounds_list_info.json"));
+
 
         if (MAKE_A_NEW_SET_OF_ROUNDS)
         {
