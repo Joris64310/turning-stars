@@ -93,29 +93,29 @@ public class ExpeInterfaceManager : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        // // Make a new set of rounds
-        // string folderPath = Path.Combine(System.Environment.GetFolderPath(System.Environment.SpecialFolder.MyDocuments), "TurningStarsConfigFiles");
-        // if (!Directory.Exists(folderPath))
-        // {
-        //     Directory.CreateDirectory(folderPath);
-        // }
+        // Make a new set of rounds
+        string folderPath = Path.Combine(System.Environment.GetFolderPath(System.Environment.SpecialFolder.MyDocuments), "TurningStarsConfigFiles");
+        if (!Directory.Exists(folderPath))
+        {
+            Directory.CreateDirectory(folderPath);
+        }
 
-        // roundWriter = new RoundWriter(Path.Combine(folderPath, "rounds_list_info.json"));
+        roundWriter = new RoundWriter(Path.Combine(folderPath, "rounds_list_info.json"));
 
 
-        // if (MAKE_A_NEW_SET_OF_ROUNDS)
-        // {
-        //     for (int i = 0; i < roundsList.Count - 1; i++)
-        //     {
-        //         roundWriter.WriteSample(roundsList[i]);     
+        if (MAKE_A_NEW_SET_OF_ROUNDS)
+        {
+            for (int i = 0; i < roundsList.Count - 1; i++)
+            {
+                roundWriter.WriteSample(roundsList[i]);
             
-        //     }
-        //     roundWriter.WriteSample(roundsList.Last(), finalSample: true);
-        // }
-        // else
-        // {
-        //     roundsList = roundWriter.ReadFileForRounds();
-        // }
+            }
+            roundWriter.WriteSample(roundsList.Last(), finalSample: true);
+        }
+        else
+        {
+            roundsList = roundWriter.ReadFileForRounds();
+        }
 
         // Get camera script
         skyboxCamera = cameraHolder.GetComponent<SkyboxCamera>();
