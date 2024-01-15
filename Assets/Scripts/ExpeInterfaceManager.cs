@@ -195,8 +195,13 @@ public class ExpeInterfaceManager : MonoBehaviour
     }
     private void TaskOnClickSetExitButton()
     {
-         Application.Quit();
+        #if UNITY_EDITOR
+            UnityEditor.EditorApplication.isPlaying = false;
+        #else
+            Application.Quit();
+        #endif
     }
+
     private void SetNextRoundParameters()
     {
         if (roundNumber < roundsList.Count)
