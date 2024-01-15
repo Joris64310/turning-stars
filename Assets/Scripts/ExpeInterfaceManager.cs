@@ -9,6 +9,7 @@ public class ExpeInterfaceManager : MonoBehaviour
 {
     //Utility objects to write data in a JSON file
     DataWriter expDataWriter;
+    RoundWriter roundWriter;
 
     // Constant
     int initNumberParticipant = 0;
@@ -17,31 +18,33 @@ public class ExpeInterfaceManager : MonoBehaviour
 
     List<Round> roundsList = new List<Round>()
         {
-            new Round(durationInSecond:roundDuration,
-                      xAxisdegreesPerSecond:0.1f,
-                      yAxisdegreesPerSecond:0,
-                      zAxisdegreesPerSecond:0),
-            new Round(durationInSecond:roundDuration,
-                      xAxisdegreesPerSecond:-0.1f,
-                      yAxisdegreesPerSecond:0,
-                      zAxisdegreesPerSecond:0),
-            new Round(durationInSecond:roundDuration,
-                      xAxisdegreesPerSecond: 0,
-                      yAxisdegreesPerSecond:0.1f,
-                      zAxisdegreesPerSecond:0),
-            new Round(durationInSecond:roundDuration,
-                      xAxisdegreesPerSecond:0,
-                      yAxisdegreesPerSecond:-0.1f,
-                      zAxisdegreesPerSecond:0),
-            new Round(durationInSecond:roundDuration,
-                      xAxisdegreesPerSecond:0,
-                      yAxisdegreesPerSecond:0,
-                      zAxisdegreesPerSecond:0.1f),
-            new Round(durationInSecond:roundDuration,
-                      xAxisdegreesPerSecond:0,
-                      yAxisdegreesPerSecond:0,
-                      zAxisdegreesPerSecond:-0.1f)
+            new Round(p_durationInSecond:roundDuration,
+                      p_xAxisdegreesPerSecond:0.1f,
+                      p_yAxisdegreesPerSecond:0,
+                      p_zAxisdegreesPerSecond:0),
+            new Round(p_durationInSecond:roundDuration,
+                      p_xAxisdegreesPerSecond:-0.1f,
+                      p_yAxisdegreesPerSecond:0,
+                      p_zAxisdegreesPerSecond:0),
+            new Round(p_durationInSecond:roundDuration,
+                      p_xAxisdegreesPerSecond: 0,
+                      p_yAxisdegreesPerSecond:0.1f,
+                      p_zAxisdegreesPerSecond:0),
+            new Round(p_durationInSecond:roundDuration,
+                      p_xAxisdegreesPerSecond:0,
+                      p_yAxisdegreesPerSecond:-0.1f,
+                      p_zAxisdegreesPerSecond:0),
+            new Round(p_durationInSecond:roundDuration,
+                      p_xAxisdegreesPerSecond:0,
+                      p_yAxisdegreesPerSecond:0,
+                      p_zAxisdegreesPerSecond:0.1f),
+            new Round(p_durationInSecond:roundDuration,
+                      p_xAxisdegreesPerSecond:0,
+                      p_yAxisdegreesPerSecond:0,
+                      p_zAxisdegreesPerSecond:-0.1f)
                     };
+
+    Round currentRound;
 
 
     // Save data
@@ -140,8 +143,6 @@ public class ExpeInterfaceManager : MonoBehaviour
                 skyboxCamera.SetSkyBoxRotation(new Vector3(0, 0, 0));
                 timeElapsePanel.SetActive(false);
                 SetNextRoundParameters();
-
-
             }
         }
 
@@ -173,19 +174,26 @@ public class ExpeInterfaceManager : MonoBehaviour
     private void TaskOnClickSetRoundParametersButton()
     {
         // Get round duration
+        currentRound.durationInSecond = int.Parse(roundDurationInSecondInputField.text);
         roundStartTime = System.DateTime.Now;
-        roundDurationTime = System.TimeSpan.FromSeconds(int.Parse(roundDurationInSecondInputField.text));
+        roundDurationTime = System.TimeSpan.FromSeconds(currentRound.durationInSecond);
 
         // Get round rotation
-        xAxisdegreesPerSecondValue = float.Parse(xAxisdegreesPerSecondInputField.text);
-        yAxisdegreesPerSecondValue = float.Parse(yAxisdegreesPerSecondInputField.text);
-        zAxisdegreesPerSecondValue = float.Parse(zAxisdegreesPerSecondInputField.text);
+        currentRound.xAxisdegreesPerSecond  = float.Parse(xAxisdegreesPerSecondInputField.text);
+        currentRound.yAxisdegreesPerSecond  = float.Parse(yAxisdegreesPerSecondInputField.text);
+        currentRound.zAxisdegreesPerSecond  = float.Parse(zAxisdegreesPerSecondInputField.text);
 
         // Prepare file to save 
-        expDataWriter = new DataWriter(participantFilePath, "round_" + roundNumber.ToString());
+        expDataWriter = new DataWriter(participantFilePath, "round_" + roundNumber.ToString() + "_data");
+
+        // Save round parameters
+        roundWriter = new RoundWriter(string.Concat(participantFilePath, "round_" + roundNumber.ToString() + "_info"));
+        roundWriter.WriteSample(currentRound, finalSample: true);
 
         //Update rotation value of the camera
-        skyboxCamera.SetSkyBoxRotation(new Vector3(xAxisdegreesPerSecondValue, yAxisdegreesPerSecondValue, zAxisdegreesPerSecondValue));
+        skyboxCamera.SetSkyBoxRotation(new Vector3(currentRound.xAxisdegreesPerSecond,
+                                                   currentRound.yAxisdegreesPerSecond,
+                                                   currentRound.zAxisdegreesPerSecond));
 
 
         roundParametersPanel.SetActive(false);
@@ -204,13 +212,14 @@ public class ExpeInterfaceManager : MonoBehaviour
 
     private void SetNextRoundParameters()
     {
+        currentRound = roundsList[roundNumber];
         if (roundNumber < roundsList.Count)
         {
             roundMessage.text =  string.Format("Round number {0}:", roundNumber + 1);
-            roundDurationInSecondInputField.text = roundsList[roundNumber].DurationInSecond.ToString();
-            xAxisdegreesPerSecondInputField.text = roundsList[roundNumber].XAxisdegreesPerSecond.ToString();
-            yAxisdegreesPerSecondInputField.text = roundsList[roundNumber].YAxisdegreesPerSecond.ToString();
-            zAxisdegreesPerSecondInputField.text = roundsList[roundNumber].ZAxisdegreesPerSecond.ToString();
+            roundDurationInSecondInputField.text = currentRound.durationInSecond.ToString();
+            xAxisdegreesPerSecondInputField.text = currentRound.xAxisdegreesPerSecond.ToString();
+            yAxisdegreesPerSecondInputField.text = currentRound.yAxisdegreesPerSecond.ToString();
+            zAxisdegreesPerSecondInputField.text = currentRound.zAxisdegreesPerSecond.ToString();
         }
         else
         {
@@ -219,41 +228,4 @@ public class ExpeInterfaceManager : MonoBehaviour
 
     }
 
-}
-public class Round{
-    private int _durationInSecond;
-    private float _xAxisdegreesPerSecond;
-    private float _yAxisdegreesPerSecond;
-    private float _zAxisdegreesPerSecond;
-
-    public Round(int durationInSecond, float xAxisdegreesPerSecond, float yAxisdegreesPerSecond, float zAxisdegreesPerSecond)
-    {
-        _durationInSecond = durationInSecond;
-        _xAxisdegreesPerSecond = xAxisdegreesPerSecond;
-        _yAxisdegreesPerSecond = yAxisdegreesPerSecond;
-        _zAxisdegreesPerSecond = zAxisdegreesPerSecond;
-    }
-
-    public int DurationInSecond
-    {
-        get => _durationInSecond;
-        set => _durationInSecond = value;
-    }
-    public float XAxisdegreesPerSecond
-    {
-        get => _xAxisdegreesPerSecond;
-        set => _xAxisdegreesPerSecond = value;
-    }
-
-    public float YAxisdegreesPerSecond
-    {
-        get => _yAxisdegreesPerSecond;
-        set => _yAxisdegreesPerSecond = value;
-    }
-
-    public float ZAxisdegreesPerSecond
-    {
-        get => _zAxisdegreesPerSecond;
-        set => _zAxisdegreesPerSecond = value;
-    }
 }
