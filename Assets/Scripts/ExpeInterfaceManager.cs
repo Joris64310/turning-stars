@@ -238,9 +238,9 @@ public class ExpeInterfaceManager : MonoBehaviour
 
     private void SetNextRoundParameters()
     {
-        currentRound = roundsList[roundNumber];
         if (roundNumber < roundsList.Count)
         {
+            currentRound = roundsList[roundNumber];
             roundMessage.text =  string.Format("Round number {0}:", roundNumber + 1);
             roundDurationInSecondInputField.text = currentRound.durationInSecond.ToString();
             xAxisdegreesPerSecondInputField.text = currentRound.xAxisdegreesPerSecond.ToString();
