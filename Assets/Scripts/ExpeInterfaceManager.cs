@@ -27,25 +27,13 @@ public class ExpeInterfaceManager : MonoBehaviour
                       p_yAxisdegreesPerSecond:0,
                       p_zAxisdegreesPerSecond:0),
             new Round(p_durationInSecond:roundDuration,
-                      p_xAxisdegreesPerSecond:-0.1f,
-                      p_yAxisdegreesPerSecond:0,
-                      p_zAxisdegreesPerSecond:0),
-            new Round(p_durationInSecond:roundDuration,
                       p_xAxisdegreesPerSecond: 0,
                       p_yAxisdegreesPerSecond:0.1f,
                       p_zAxisdegreesPerSecond:0),
             new Round(p_durationInSecond:roundDuration,
                       p_xAxisdegreesPerSecond:0,
-                      p_yAxisdegreesPerSecond:-0.1f,
-                      p_zAxisdegreesPerSecond:0),
-            new Round(p_durationInSecond:roundDuration,
-                      p_xAxisdegreesPerSecond:0,
                       p_yAxisdegreesPerSecond:0,
-                      p_zAxisdegreesPerSecond:0.1f),
-            new Round(p_durationInSecond:roundDuration,
-                      p_xAxisdegreesPerSecond:0,
-                      p_yAxisdegreesPerSecond:0,
-                      p_zAxisdegreesPerSecond:-0.1f)
+                      p_zAxisdegreesPerSecond:0.1f)
                     };
     Round currentRound;
 
