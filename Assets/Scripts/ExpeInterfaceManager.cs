@@ -10,6 +10,9 @@ public class ExpeInterfaceManager : MonoBehaviour
 {
     //Utility objects to write data in a JSON file
     DataWriter expDataWriter;
+
+    RoundWriter roundsWriter;
+
     RoundWriter roundWriter;
 
     // Constant
@@ -44,8 +47,6 @@ public class ExpeInterfaceManager : MonoBehaviour
                       p_yAxisdegreesPerSecond:0,
                       p_zAxisdegreesPerSecond:-0.1f)
                     };
-    bool MAKE_A_NEW_SET_OF_ROUNDS = false;
-
     Round currentRound;
 
 
@@ -85,10 +86,7 @@ public class ExpeInterfaceManager : MonoBehaviour
     System.DateTime roundStartTime;
     System.TimeSpan roundElapsedTime;
     System.TimeSpan roundDurationTime;
- 
-    float xAxisdegreesPerSecondValue;
-    float yAxisdegreesPerSecondValue;
-    float zAxisdegreesPerSecondValue;
+
 
     // Start is called before the first frame update
     void Start()
@@ -98,23 +96,26 @@ public class ExpeInterfaceManager : MonoBehaviour
         if (!Directory.Exists(folderPath))
         {
             Directory.CreateDirectory(folderPath);
+            
+
         }
 
-        roundWriter = new RoundWriter(Path.Combine(folderPath, "rounds_list_info.json"));
+        string roundsFilePath = Path.Combine(folderPath, "rounds_list_info.json");
+        roundsWriter = new RoundWriter(roundsFilePath);
 
-
-        if (MAKE_A_NEW_SET_OF_ROUNDS)
+        if (!File.Exists(roundsFilePath))
         {
+            roundsWriter.InitializeFile();
             for (int i = 0; i < roundsList.Count - 1; i++)
             {
-                roundWriter.WriteSample(roundsList[i]);
+                roundsWriter.WriteSample(roundsList[i]);
             
             }
-            roundWriter.WriteSample(roundsList.Last(), finalSample: true);
+            roundsWriter.WriteSample(roundsList.Last(), finalSample: true);
         }
         else
         {
-            roundsList = roundWriter.ReadFileForRounds();
+            roundsList = roundsWriter.ReadFileForRounds();
         }
 
         // Get camera script
@@ -140,8 +141,25 @@ public class ExpeInterfaceManager : MonoBehaviour
 
 
         //Proposed a participant number and path to save data
+        string expeFolder =  Path.Combine(System.Environment.GetFolderPath(System.Environment.SpecialFolder.MyDocuments), "turning_stars");
+        expeFolderInputField.text = expeFolder;
+
+        if (Directory.Exists(expeFolder))
+        {
+            string[] dirNames = Directory.GetDirectories(expeFolder);
+            Debug.Log(dirNames);
+            for (int i = 0; i < dirNames.Count(); i++)
+            {
+
+                int lastParticipantNumber = Convert.ToInt32(dirNames[i].Split('s').Last().Split('_')[0]);
+                if (lastParticipantNumber >= initNumberParticipant)
+                {
+                     initNumberParticipant = lastParticipantNumber + 1;
+                }
+            }
+            
+        }
         participantNumberInputField.text = initNumberParticipant.ToString();
-        expeFolderInputField.text = Path.Combine(System.Environment.GetFolderPath(System.Environment.SpecialFolder.MyDocuments), "turning_stars");
 
         // Set inactive the round panel
         roundParametersPanel.SetActive(false);
@@ -210,10 +228,11 @@ public class ExpeInterfaceManager : MonoBehaviour
         currentRound.zAxisdegreesPerSecond  = float.Parse(zAxisdegreesPerSecondInputField.text);
 
         // Prepare file to save 
-        expDataWriter = new DataWriter(participantFilePath, "round_" + roundNumber.ToString() + "_data");
+        expDataWriter = new DataWriter(participantFilePath, "round_" + (roundNumber + 1).ToString() + "_data");
 
         // Save round parameters
-        roundWriter = new RoundWriter(string.Concat(participantFilePath, "round_" + roundNumber.ToString() + "_info"));
+        roundWriter = new RoundWriter(string.Concat(participantFilePath, "round_" + (roundNumber + 1).ToString() + "_info"));
+        roundWriter.InitializeFile();
         roundWriter.WriteSample(currentRound, finalSample: true);
 
         //Update rotation value of the camera

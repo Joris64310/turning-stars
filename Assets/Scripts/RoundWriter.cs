@@ -16,10 +16,15 @@ public class RoundWriter
     public RoundWriter(string filePath)
     {
         this.filePath = filePath;
+        firstSample = true;
+    }
+
+    public void InitializeFile()
+    {
         // Create file if needed and write its header
         writer = new StreamWriter(this.filePath, false);  // Erase file if it already exists
         writer.WriteLine("{\"rounds\":[");
-        firstSample = true;
+
     }
     public RoundWriter(string dstFolderPath, string dstFilename) : this(string.Concat(dstFolderPath, dstFilename)) { }
 
